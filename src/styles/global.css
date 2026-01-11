@@ -1,0 +1,25 @@
+:root {
+  --bg-primary: #CED4DA;
+  --card-bg: #FFFFFF;
+  --green-primary: #54B46A;
+  --green-dark: #3B944E;
+  --gray-light: #DEE2E6;
+  --text-black: #000000;
+  --text-white: #FFFFFF;
+  
+  --border-radius-sm: 8px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 18px;
+}
+
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; 
+}
+
+* {
+  box-sizing: border-box;
+}
