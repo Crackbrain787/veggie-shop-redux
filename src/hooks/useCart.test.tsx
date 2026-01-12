@@ -1,9 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useCart } from './useCart'
-import type { Product } from '../types'  
+import type { Product } from '../types'
 
-// Mock данные для тестов
 const mockProduct: Product = {
   id: 1,
   name: 'Test Vegetable',
@@ -12,7 +11,7 @@ const mockProduct: Product = {
   category: 'vegetables'
 }
 
-describe('useCart', () => {
+describe('useCart (legacy hook)', () => {
   it('следует инициализировать с пустой корзиной', () => {
     const { result } = renderHook(() => useCart())
 

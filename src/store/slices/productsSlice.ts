@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { Product } from '../../types';
 
-
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (_, { rejectWithValue }) => {
@@ -23,7 +22,7 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-interface ProductsState {
+export interface ProductsState {
   items: Product[];
   loading: boolean;
   error: string | null;

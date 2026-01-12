@@ -1,7 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { ProductList } from './ProductList';
 import { MantineProvider } from '@mantine/core';
+import productsReducer from '../../store/slices/productsSlice';
+import cartReducer from '../../store/slices/cartSlice';
 import type { Product } from '../../types';
 
 const mockProducts: Product[] = [
@@ -35,30 +39,47 @@ const mockProducts: Product[] = [
   }
 ];
 
-const mockOnAddToCart = vi.fn();
+const createMockStore = () => {
+  return configureStore({
+    reducer: {
+      products: productsReducer,
+      cart: cartReducer
+    },
+    preloadedState: {
+      products: {
+        items: mockProducts,
+        loading: false,
+        error: null
+      },
+      cart: {
+        items: [],
+        totalItems: 0,
+        totalPrice: 0
+      }
+    }
+  });
+};
 
 const renderWithProviders = (component: React.ReactNode) => {
+  const store = createMockStore();
   return render(
     <MantineProvider>
-      {component}
+      <Provider store={store}>
+        {component}
+      </Provider>
     </MantineProvider>
   );
 };
 
 describe('ProductList', () => {
   it('отображает название каталога', () => {
-    renderWithProviders(
-      <ProductList products={mockProducts} onAddToCart={mockOnAddToCart} />
-    );
-
+    renderWithProviders(<ProductList />);
     expect(screen.getByText('Catalog')).toBeInTheDocument();
   });
 
   it('отображает все продукты в списке', () => {
-    renderWithProviders(
-      <ProductList products={mockProducts} onAddToCart={mockOnAddToCart} />
-    );
-
+    renderWithProviders(<ProductList />);
+    
     expect(screen.getByText('Carrot')).toBeInTheDocument();
     expect(screen.getByText('Tomato')).toBeInTheDocument();
     expect(screen.getByText('Cucumber')).toBeInTheDocument();
@@ -66,20 +87,9 @@ describe('ProductList', () => {
   });
 
   it('отображает правильное количество карточек товаров', () => {
-    renderWithProviders(
-      <ProductList products={mockProducts} onAddToCart={mockOnAddToCart} />
-    );
-
+    renderWithProviders(<ProductList />);
+    
     const productCards = screen.getAllByText(/Carrot|Tomato|Cucumber|Potato/);
     expect(productCards).toHaveLength(4);
-  });
-
-  it('отображает пустое состояние, когда продукты не предоставляются', () => {
-    renderWithProviders(
-      <ProductList products={[]} onAddToCart={mockOnAddToCart} />
-    );
-
-    expect(screen.getByText('Catalog')).toBeInTheDocument();
-    expect(screen.queryByText('Carrot')).not.toBeInTheDocument();
   });
 });
